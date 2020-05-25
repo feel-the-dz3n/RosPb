@@ -144,17 +144,19 @@ namespace RosPb
 
         private void InbvUpdateProgressBar(int Progress)
         {
-            var BoundedProgress = (InbvProgressState.Floor / 100) + Progress;
-            var FillCount = ProgressBarWidth * (InbvProgressState.Bias * BoundedProgress) / 1000000;
+            var prog2 = Progress / 100.0f;
+            prog2 *= prog2;
+            prog2 *= prog2;
 
-            DrawProgressBar(ProgressBarLeft, FillCount, true, ProgressBarForeground);
+            int FillCount = (int)(ProgressBarWidth * prog2);
 
             if (ProgressBarShowBkg)
             {
-                var BoundedProgressMax = (InbvProgressState.Floor / 100) + (InbvProgressState.Ceiling / 100);
-                var FillCountMax = ProgressBarWidth * (InbvProgressState.Bias * BoundedProgressMax) / 1000000;
+                var FillCountMax = ProgressBarWidth;
                 DrawProgressBar(ProgressBarLeft + FillCount, FillCountMax, false, ProgressBarBackground);
             }
+
+            DrawProgressBar(ProgressBarLeft, FillCount, true, ProgressBarForeground);
 
             this.Invoke(new Action(() =>
             {
